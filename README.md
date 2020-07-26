@@ -1,9 +1,18 @@
 # OBSERVABILITY WORKSHOP
 
-### Examine the architecture of the `mfence` app:
+### OVERVIEW
+The files found in this repo comprise all the required artifacts to run a sample app and demonstrate the a few metrics' scraping scenarios. The sample app `mfence` is configured using the original `fence` app as inspiration, i.e., a single container running both Nginx (web server) and uWSGI (app server) to host a Python application that operates with Flask Blueprints.
 
+All these 3 logical layers (nginx, uwsgi & python app) carry configuration changes and the addition of new HTTP endpoints to expose metrics, such as:
+- Nginx: Number of active connections and HTTP I/O (Reading, Writing and Waiting) = `http://localhost:6565/nginx_status`.
+- uWSGI: Workers' activity, status, data transmission, errors = `http://localhost:6565/uwsgi_status`
+- mfence's `/metrics` endpoint: This blueprint script produces fictitious metrics. The fake data illustrates what sort of application-specific metrics could be exposed to give service-owners more visibility on interesting events = `http://localhost:6565/metrics/`.
 
-### Other interesting points to talk about
+The following diagram illustrates how the metrics are obtained:
+
+![metrics_scraping](metrics_scraping.png)
+
+### Other details to talk about
 - Poetry
 - Flask / Blueprints
 - Dockerfile (and dynamic config changes in `dockerrun.sh`)
@@ -88,6 +97,13 @@ docker-compose up -d
 
 # stop all
 docker-compose down
+```
+
+#### DOCKER CLEANUP COMMANDS
+```
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+docker rmi $(docker images | grep "<none>" | awk '{ print $3}')
 ```
 
 ### Some queries
