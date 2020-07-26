@@ -1,0 +1,41 @@
+global:
+  scrape_interval:     15s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds.
+
+  # Attach these extra labels to all timeseries collected by this Prometheus instance.
+  external_labels:
+    monitor: 'gen3-mfence'
+
+rule_files:
+  - 'prometheus.rules.yml'
+
+scrape_configs:
+  - job_name:       'mfence-uwsgi'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: ['uwsgi-exporter:9117']
+        labels:
+          group: 'app-server'
+
+  - job_name:       'mfence-nginx'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: ['nginx-prometheus-exporter:9113']
+        labels:
+          group: 'web-server'
+
+  - job_name:       'mfence-http'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: ['mfence:80']
+        labels:
+          group: 'dev'
