@@ -72,7 +72,15 @@ http://localhost:9117/metrics
 http://localhost:9090/
 ```
 
-_TODO: Move all this config to a docker-compose file and/or create a deployment descriptor for a minikube demo_
+### STOP ALL CONTAINERS AND TRY DOCKER-COMPOSE
+
+```
+# start all
+docker-compose up -d
+
+# stop all
+docker-compose down
+```
 
 ### Some queries
 
