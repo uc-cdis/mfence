@@ -30,7 +30,7 @@ docker build --tag mfence:try1
 
 ### START YOUR APP
 ```
-docker run -it --rm -p 6565:80 --name mfence mfence:try1
+docker run -it --rm -v $(pwd)/logs/:/var/log/nginx/ -p 6565:80 --name mfence mfence:try1
 ```
 
 ### START THE NGINX METRICS EXPORTER
@@ -43,10 +43,15 @@ docker run -p 9113:9113 --rm --link mfence:mfence --name nginx-prometheus-export
 docker run --rm -it -p 9117:9117 --link mfence:mfence --name uwsgi-exporter timonwong/uwsgi-exporter --stats.uri http://mfence/uwsgi_status
 ```
 
+### START THE NGINX LOGS METRICS EXPORTER
+```
+docker run --rm --name nginx-logs-exporter -v $(pwd)/logs:/mnt/nginxlogs/ -p 4040:4040 quay.io/martinhelmich/prometheus-nginxlog-exporter mnt/nginxlogs/access_not_json.log
+```
+
 ### START PROMETHEUS CONTAINER
 _debug mode enabled in case you have any metrics scraping issues_
 ```
-docker run --rm -it -p 9090:9090 -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml --link mfence:mfence --link nginx-prometheus-exporter:nginx-prometheus-exporter --link uwsgi-exporter:uwsgi-exporter --entrypoint sh  prom/prometheus -c "/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.console.libraries=/usr/share/prometheus/console_libraries --web.console.templates=/usr/share/prometheus/consoles --log.level=debug"
+docker run --rm -it -p 9090:9090 -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml --link mfence:mfence --link nginx-prometheus-exporter:nginx-prometheus-exporter --link uwsgi-exporter:uwsgi-exporter --link nginx-logs-exporter:nginx-logs-exporter --entrypoint sh  prom/prometheus -c "/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.console.libraries=/usr/share/prometheus/console_libraries --web.console.templates=/usr/share/prometheus/consoles --log.level=debug"
 ```
 
 ### TESTING
@@ -68,6 +73,9 @@ http://localhost:9113/metrics
 # your uwsgi metrics
 http://localhost:9117/metrics
 
+# your nginx logs metrics
+http://localhost:4040/metrics
+
 # your Prometheus console
 http://localhost:9090/
 ```
@@ -88,7 +96,9 @@ Just a few prometheus queries to play around with the metrics:
 ```
 avg(cirrus_retries)
 rate(uwsgi_worker_transmitted_bytes_total[5m])
+rate(nginx_http_response_count_total{status="200"}[5m])
 # TODO: Add more interesting queries
+# e.g., "success rate ((num_failures / total_reqs)*100 )
 ```
 
 ### Screenshots

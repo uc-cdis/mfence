@@ -4,6 +4,8 @@ services:
     image: mfence:try1
     ports:
       - '127.0.0.1:6565:80'
+    volumes:
+      - logs-folder:/var/log/nginx/
   nginx-prometheus-exporter:
     image: nginx/nginx-prometheus-exporter:0.8.0
     command: "-nginx.scrape-uri http://mfence:80/nginx_status"
@@ -22,6 +24,17 @@ services:
       - mfence
     depends_on:
       - mfence
+  nginx-logs-exporter:
+    image: quay.io/martinhelmich/prometheus-nginxlog-exporter:v1.7.1
+    command: "mnt/nginxlogs/access_not_json.log"
+    ports:
+      - '127.0.0.1:4040:4040'
+    volumes:
+      - logs-folder:/mnt/nginxlogs/
+    links:
+      - mfence
+    depends_on:
+      - mfence
   prometheus:
     image: prom/prometheus:v2.19.3
     command: ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--web.console.libraries=/usr/share/prometheus/console_libraries", "--web.console.templates=/usr/share/prometheus/consoles", "--log.level=debug"]
@@ -35,5 +48,8 @@ services:
       - mfence
       - nginx-prometheus-exporter
       - uwsgi-exporter
+      - nginx-logs-exporter
     depends_on:
       - mfence
+volumes:
+  logs-folder:

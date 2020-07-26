@@ -1,5 +1,6 @@
 src/mfence/app.py_bkp
 output.log
+logs/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

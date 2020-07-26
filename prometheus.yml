@@ -30,6 +30,16 @@ scrape_configs:
         labels:
           group: 'web-server'
 
+  - job_name:       'mfence-nginx-logs'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+
+    static_configs:
+      - targets: ['nginx-logs-exporter:4040']
+        labels:
+          group: 'nginx-logs'
+
   - job_name:       'mfence-http'
 
     # Override the global default and scrape targets from this job every 5 seconds.
