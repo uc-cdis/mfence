@@ -96,7 +96,7 @@ Just a few prometheus queries to play around with the metrics:
 ```
 avg(cirrus_retries)
 rate(uwsgi_worker_transmitted_bytes_total[5m])
-rate(nginx_http_response_count_total{status="200"}[5m])
+rate(nginx_http_response_count_total{status="200", method="GET"}[5m])
 # TODO: Add more interesting queries
 # e.g., "success rate ((num_failures / total_reqs)*100 )
 ```
