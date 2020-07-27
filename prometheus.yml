@@ -11,7 +11,7 @@ rule_files:
 
 scrape_configs:
   - job_name:       'mfence-uwsgi'
-
+    honor_labels: true
     # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
 
@@ -21,7 +21,7 @@ scrape_configs:
           group: 'app-server'
 
   - job_name:       'mfence-nginx'
-
+    honor_labels: true
     # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
 
@@ -31,7 +31,7 @@ scrape_configs:
           group: 'web-server'
 
   - job_name:       'mfence-nginx-logs'
-
+    honor_labels: true
     # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
 
@@ -41,7 +41,7 @@ scrape_configs:
           group: 'nginx-logs'
 
   - job_name:       'mfence-http'
-
+    honor_labels: true
     # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
 
