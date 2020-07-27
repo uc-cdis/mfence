@@ -60,7 +60,7 @@ docker run --rm --name nginx-logs-exporter -v $(pwd)/logs:/mnt/nginxlogs/ -p 404
 ### START PROMETHEUS CONTAINER
 _debug mode enabled in case you have any metrics scraping issues_
 ```
-docker run --rm -it -p 9090:9090 -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml --link mfence:mfence --link nginx-prometheus-exporter:nginx-prometheus-exporter --link uwsgi-exporter:uwsgi-exporter --link nginx-logs-exporter:nginx-logs-exporter --entrypoint sh  prom/prometheus -c "/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.console.libraries=/usr/share/prometheus/console_libraries --web.console.templates=/usr/share/prometheus/consoles --log.level=debug"
+docker run --rm -it -p 9090:9090 -v $(pwd)/prometheus.yml:/etc/prometheus/prometheus.yml --link mfence:mfence --link nginx-prometheus-exporter:nginx-prometheus-exporter --link uwsgi-exporter:uwsgi-exporter --link nginx-logs-exporter:nginx-logs-exporter --name myprometheus --entrypoint sh  prom/prometheus -c "/bin/prometheus --config.file=/etc/prometheus/prometheus.yml --storage.tsdb.path=/prometheus --web.console.libraries=/usr/share/prometheus/console_libraries --web.console.templates=/usr/share/prometheus/consoles --log.level=debug"
 ```
 
 ### TESTING
@@ -87,6 +87,11 @@ http://localhost:4040/metrics
 
 # your Prometheus console
 http://localhost:9090/
+```
+
+# START GRAFANA CONTAINER
+```
+docker run -it --rm --link prometheus:prometheus --name grafana -p 3001:3000 grafana/grafana:7.1.1
 ```
 
 ### STOP ALL CONTAINERS AND TRY DOCKER-COMPOSE
