@@ -127,3 +127,8 @@ rate(nginx_http_response_count_total{status="200", method="GET"}[5m])
 How it looks like once you put it all together:
 TODO: Add screenshots
 
+### Things to consider:
+- https://pypi.org/project/prometheus-flask-exporter/
+- https://github.com/flask-dashboard/Flask-MonitoringDashboard
+- https://rollout.io/blog/monitoring-your-synchronous-python-web-applications-using-prometheus/
+
