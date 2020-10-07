@@ -2,10 +2,10 @@ import flask
 from flask import make_response
 import random
 
-blueprint = flask.Blueprint("metrics", __name__)
+blueprint = flask.Blueprint("other_metrics", __name__)
 
 @blueprint.route("/", methods=["GET", "POST"])
-def metrics():
+def other_metrics():
   users = ['alice', 'bob', 'mallet']
   idps = ['nih', 'google', 'microsoft']
 
