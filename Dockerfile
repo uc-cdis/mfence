@@ -9,6 +9,8 @@ RUN apk update \
 
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
+COPY clear_prometheus_multiproc /bin/
+
 COPY . /src/
 WORKDIR /src
 COPY dockerrun.sh /dockerrun.sh

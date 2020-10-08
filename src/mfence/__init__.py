@@ -2,12 +2,16 @@ import flask
 from flask_cors import CORS
 
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
-from prometheus_client import make_wsgi_app
+import prometheus_client
+from prometheus_client import multiprocess, make_wsgi_app
 
 from mfence.views import hello
 from mfence.blueprints import test
 from mfence.blueprints import another_test
 from mfence.blueprints import other_metrics
+
+registry = prometheus_client.CollectorRegistry()
+multiprocess.MultiProcessCollector(registry)
 
 app = flask.Flask(__name__)
 CORS(app=app, headers=["content-type", "accept"], expose_headers="*")
@@ -48,5 +52,5 @@ def app_register_blueprints(app):
 
 # Add prometheus wsgi middleware to route /metrics requests
 app.wsgi_app = DispatcherMiddleware(app.wsgi_app, {
-    '/metrics': make_wsgi_app()
+    '/metrics': make_wsgi_app(registry=registry)
 })
