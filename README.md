@@ -34,7 +34,7 @@ uwsgitop http://127.0.0.1:9191
 
 ### BUILDING THE DOCKER IMAGE
 ```
-docker build --tag mfence:try1
+docker build --tag mfence:try1 .
 ```
 
 ### START YOUR APP
