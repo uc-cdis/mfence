@@ -22,8 +22,15 @@ Examine the `src/mfence/blueprints/metrics.py` script.
 
 ### Running local test
 ```
+brew install nginx
+brew install uwsgi
+
+# copy over the nginx.conf to /usr/local/etc/nginx/nginx.conf and set a diff port (e.g., 6567)
+
 brew services restart nginx
 uwsgi --socket 127.0.0.1:3031 --ini uwsgi-local-run.ini
+
+# now just try: http://localhost:6567/
 ```
 
 ### CHECK SOME STATS

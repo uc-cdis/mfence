@@ -1,5 +1,5 @@
 import flask
-from flask import request
+from flask import request, session
 
 from prometheus_client import Counter
 
@@ -11,6 +11,7 @@ c = Counter('test_info_requests', 'test_info requests', ['client_ip', 'endpoint'
 
 @blueprint.route("/", methods=["GET", "POST"])
 def test_info():
+    session['Username'] = 'Admin'
     c.labels(request.remote_addr, 'test').inc()
     info = {
       "dummy_data": "foo",

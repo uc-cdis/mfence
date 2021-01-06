@@ -4,6 +4,8 @@ from flask_cors import CORS
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 import prometheus_client
 from prometheus_client import multiprocess, make_wsgi_app
+#from prometheus_flask_exporter import PrometheusMetrics
+from prometheus_flask_exporter.multiprocess import UWsgiPrometheusMetrics
 
 from mfence.views import hello
 from mfence.blueprints import test
@@ -14,7 +16,22 @@ registry = prometheus_client.CollectorRegistry()
 multiprocess.MultiProcessCollector(registry)
 
 app = flask.Flask(__name__)
+
+app.secret_key = 'some key'
+
+metrics = UWsgiPrometheusMetrics(app)
+
 CORS(app=app, headers=["content-type", "accept"], expose_headers="*")
+
+# static information as metric
+metrics.info('app_info', 'Fence version info', version='4.24.3')
+
+metrics.register_default(
+    metrics.counter(
+        'by_path_counter', 'Request count by request paths',
+        labels={'path': lambda: request.path}
+    )
+)
 
 def warn_about_logger():
     raise Exception(

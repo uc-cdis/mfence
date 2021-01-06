@@ -1,4 +1,4 @@
-FROM quay.io/cdis/python-nginx:pybase3-1.2.0
+FROM quay.io/cdis/python-nginx:pybase3-1.4.2
 
 ENV appname=mfence
 
