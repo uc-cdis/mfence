@@ -1,5 +1,13 @@
 version: '3.4'
 services:
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - '8086:8086'
+    volumes:
+      - influxdb-storage:/var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=data_access_metrics
   mfence:
     image: mfence:try1
     ports:
@@ -66,3 +74,4 @@ services:
 volumes:
   logs-folder:
   grafana-storage:
+  influxdb-storage:
